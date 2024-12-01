@@ -1,6 +1,12 @@
 
 # Assignment 2 - Real-time Monitoring System for Rideau Canal Skateway
 
+# Group 12
+## Members
+   - 1. Stefeena Vellachalil Benny (041154503)
+   - 2. Akhil Jose (041171055)
+   - 3. Thoufeek Baber (041166788)
+
 ## Table of Contents
 
 1. [Overview](#overview)
