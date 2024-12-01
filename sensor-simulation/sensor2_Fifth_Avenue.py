@@ -3,7 +3,7 @@ import random
 from azure.iot.device import IoTHubDeviceClient, Message
 import json
 
-CONNECTION_STRING = "Your IoT Hub device connection string here"
+CONNECTION_STRING = "HostName=assignment2hub.azure-devices.net;DeviceId=sensor2_Fifth_Avenue;SharedAccessKey=KlpCnyF2vG4MIc18X909uKv/R7LVXvNj1A2ZhWPKdAg="
 
 def get_telemetry():
     return {
