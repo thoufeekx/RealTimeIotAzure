@@ -113,7 +113,85 @@ Run the following command to install the necessary libraries:
 pip install -r requirements.txt
 ```
 
+
+### 3. Code explanation
+
+## Code Explanation
+
+### **Imports**
+```python
+import time, random, json
+from azure.iot.device import IoTHubDeviceClient, Message
+```
+
+
+- **`time`**: Adds delays and generates timestamps.
+- **`random`**: Simulates sensor variability.
+- **`azure.iot.device`**: Interfaces with Azure IoT Hub:
+  - `IoTHubDeviceClient`: Manages `device` connections.
+  - `Message`: Wraps telemetry data for transmission.
+- **`json`**: Converts data into JSON format.
+
 ---
+
+### **Connection String**
+```python
+CONNECTION_STRING = "HostName=...;DeviceId=...;SharedAccessKey=..."
+```
+- Contains credentials for connecting to Azure IoT Hub.
+
+---
+
+### **Telemetry Data Simulation**
+```python
+def get_telemetry():
+    return {
+        "location": "Dow's Lake",
+        "iceThickness": round(random.uniform(15.0, 35.0), 2),
+        "surfaceTemperature": round(random.uniform(-10.0, 2.0), 2),
+        "snowAccumulation": round(random.uniform(0.0, 20.0), 2),
+        "externalTemperature": round(random.uniform(-15.0, 5.0), 2),
+        "timestamp": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())
+    }
+```
+- Simulates sensor data with random values and timestamps.
+
+---
+
+### **Main Function**
+```python
+def main():
+    client = IoTHubDeviceClient.create_from_connection_string(CONNECTION_STRING)
+    try:
+        while True:
+            telemetry = get_telemetry()
+            client.send_message(Message(json.dumps(telemetry)))
+            print(f"Sent: {telemetry}")
+            time.sleep(10)
+    except KeyboardInterrupt:
+        print("Stopped.")
+    finally:
+        client.disconnect()
+```
+1. Connects to Azure IoT Hub.
+2. Continuously generates and sends telemetry data every 10 seconds.
+3. Gracefully disconnects on interruption.
+
+---
+
+### **Execution**
+```python
+if __name__ == "__main__":
+    main()
+```
+- Ensures the script runs only when executed directly.
+
+---
+
+## Notes
+- **Dependencies**: Install the Azure IoT SDK (`pip install azure-iot-device`).
+- **Security**: Avoid exposing connection strings in production.
+
 
 ## Creating Azure Resources
 
@@ -291,6 +369,36 @@ pip install -r requirements.txt
       *Figure shows data inside the json file downloaded from the running stream analytics job containing all three location and the corresponding ice thickness and snow accumulation.*
 
 ---
+
+## Results
+
+The **Real-time Monitoring System for Rideau Canal Skateway** successfully simulated IoT sensors at three key locations: **Dow's Lake**, **Fifth Avenue**, and **NAC**, providing continuous data on critical parameters such as **ice thickness**, **surface temperature**, **snow accumulation**, and **external temperature**. 
+
+### Key Achievements:
+1. **Data Transmission**:  
+   Telemetry data was successfully sent from the simulated IoT sensors to **Azure IoT Hub** in real-time.
+
+2. **Real-time Processing**:  
+   **Azure Stream Analytics** processed the incoming data, calculating aggregated metrics (e.g., average ice thickness and maximum snow accumulation) over a 5-minute window.
+
+3. **Data Storage**:  
+   Processed results were stored in **Azure Blob Storage** in JSON format, enabling easy access for further analysis and reporting.
+
+4. **Visualization and Validation**:  
+   Data previews and test queries confirmed accurate processing and storage of telemetry data.
+
+### Sample Output:
+- **Processed Data Preview**:
+   ```json
+   {
+       "location": "Dow's Lake",
+       "avgIceThickness": 28.5,
+       "maxSnowAccumulation": 12.3,
+       "aggregationTime": "2024-12-02T12:00:00Z"
+   }
+   ```
+The system demonstrates scalability and reliability, providing a robust solution for monitoring the Rideau Canal Skateway in real time.
+
 
 ## Reflection
 
